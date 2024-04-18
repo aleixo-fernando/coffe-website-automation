@@ -10,13 +10,15 @@ describe('Validating coffe website', () => {
         validacoes.verificaCarrinhoVazio('https://coffee-cart.app/cart')
   })
 
-  it('Buying coffes',() =>{
+  it('Buying Specific Coffe',() =>{
     cy.log('Entrando no website')
     cy.visit('https://coffee-cart.app/')
     cy.log('Asserting there are 9 coffes available on the menu')
     validacoes.verificaCoffes(9)
     cy.log('Buying a random coffe')
-    validacoes.compraCoffeEspecifico('Americano','Cliente','email@email.com')
+    validacoes.compraCoffeEspecifico('Americano')
+    cy.log('Checkout')
+    validacoes.checkoutrapido('nome','email@email.com')
   })
 
 
