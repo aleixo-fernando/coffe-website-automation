@@ -23,30 +23,49 @@ cy.log('URL CORRETA')
     }
 
 
-    function compraCoffeEspecifico(nomecoffe){
-        cy.log('Comprando o café '+nomecoffe)
-        cy.get(`[data-test="${nomecoffe}"]`).click()
-            cy.contains('h4[data-v-a9662a08]',nomecoffe).then(($h4Element) =>{
-            const preco = $h4Element.find('small').text();
-            cy.log('BEBIDA:' + nomecoffe)
-            cy.log('PREÇO: ' + preco)
-            cy.wrap(preco).as('preco')
-            cy.contains('Total:').should('have.text','Total: '+preco)
-            cy.log(`O preço do café `+nomecoffe+` está corretamente precificado`)
-        })       
-        
+     function compraCoffeEspecifico(nomecoffe,vezes){
+        var preco_total=0;
+        cy.log('Comprando o café '+nomecoffe+ ' '+vezes+' vezes.')
+        for(let i=0;i<vezes;i++){
+
+            var precoemfloat
+            var contador = 1;
+            var preco = cy.contains('h4',nomecoffe)
+            .find('small')
+            .invoke('text')
+            .then((preco) =>{
+                precoemfloat = parseFloat(preco.replace("$",""))
+                cy.log(preco)
+            cy.get(`[data-test="${nomecoffe}"]`).click()
+            var subpreco = precoemfloat * contador
+            contador++
+            preco_total = preco_total + subpreco
+            cy.get('[data-test="checkout"]').should('have.text','Total: $'+subpreco+'.00')
+            cy.wait(1000)
+            })
+            } 
+
+    
+    
+    console.log(preco_total)
+    return preco_total
+
     }
 
     function checkoutrapido(nomeCliente,nomeEmail){
+        let compracoffe = this.compraCoffeEspecifico('Americano','2')
+        console.log(compracoffe)
         cy.get('[data-test="checkout"]').click({force:true})
-        cy.wait(10000)       
+        cy.wait(1000)       
         cy.get('#name').type(nomeCliente)
         cy.get('#email').type(nomeEmail) 
         cy.get('#promotion').check()
         cy.get('.close').click()
-        cy.wait(10000)
+        cy.wait(1000)
         cy.log('PRESSIONAR O BOTÃO DE ENVIAR E-MAIL RESULTA EM BUG, PULANDO PARA O PRÓXIMO PASSO.')
         cy.contains('cart').click()
+        cy.wait(1000)
+        cy.get('[data-test="checkout"]').should('have.text','Total: $'+compracoffe+'.00')
 
     }
 

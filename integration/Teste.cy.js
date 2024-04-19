@@ -16,7 +16,7 @@ describe('Validating coffe website', () => {
     cy.log('Asserting there are 9 coffes available on the menu')
     validacoes.verificaCoffes(9)
     cy.log('Buying a random coffe')
-    validacoes.compraCoffeEspecifico('Americano')
+    //validacoes.compraCoffeEspecifico('Americano','2')
     cy.log('Checkout')
     validacoes.checkoutrapido('nome','email@email.com')
   })
